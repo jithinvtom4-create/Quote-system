@@ -110,8 +110,8 @@ export function QuotePreview({ quote, totals, onBack, onNew }: QuotePreviewProps
         it.mfr,
         it.qty,
         it.unit,
-        it.price.toFixed(3),
-        (it.qty * it.price * (1 - it.rowdisc / 100)).toFixed(3)
+        `${quote.currency} ${it.price.toFixed(3)}`,
+        `${quote.currency} ${(it.qty * it.price * (1 - it.rowdisc / 100)).toFixed(3)}`
       ]);
 
       autoTable(doc, {
@@ -239,7 +239,7 @@ export function QuotePreview({ quote, totals, onBack, onNew }: QuotePreviewProps
                                    <td className="p-2 text-slate-500 font-medium">{it.packing}</td>
                                    <td className="p-2 text-center font-bold text-slate-700">{it.qty} {it.unit}</td>
                                    <td className="p-2 text-right text-slate-600 font-medium">{it.price.toFixed(3)}</td>
-                                   <td className="p-2 text-right font-black text-emerald-900">{(it.qty * it.price * (1 - it.rowdisc / 100)).toFixed(3)}</td>
+                                   <td className="p-2 text-right font-black text-emerald-900">{quote.currency} {(it.qty * it.price * (1 - it.rowdisc / 100)).toFixed(3)}</td>
                                 </tr>
                              ))}
                           </tbody>

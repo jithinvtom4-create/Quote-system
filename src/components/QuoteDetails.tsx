@@ -318,6 +318,7 @@ export function QuoteDetails({ quote, updateQuote, resetForm }: QuoteDetailsProp
                 <Label className="text-xs font-semibold">Shipping</Label>
                 <Input 
                   type="number" 
+                  step="0.001"
                   value={quote.shipping} 
                   onChange={(e) => updateQuote({ shipping: Number(e.target.value) })}
                   className="h-8 text-xs"

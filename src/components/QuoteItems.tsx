@@ -237,6 +237,7 @@ export function QuoteItems({ quote, updateQuote, addItem, updateItem, removeItem
                     <TableCell className="p-1">
                       <Input 
                         type="number"
+                        step="0.001"
                         value={item.price}
                         onChange={(e) => updateItem(item.id, { price: Number(e.target.value) })}
                         className="h-7 text-xs text-right pr-1"

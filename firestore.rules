@@ -23,11 +23,7 @@ service cloud.firestore {
     }
 
     match /quotes/{quoteId} {
-      allow create: if isSignedIn() 
-        && request.resource.data.userId == request.auth.uid
-        && isValidQuote(request.resource.data);
-      
-      allow read, update, delete: if isOwner(resource.data.userId);
+      allow read, write: if isValidQuote(request.resource.data || resource.data);
     }
     
     // Test collection for boot check

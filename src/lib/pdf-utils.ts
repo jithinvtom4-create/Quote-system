@@ -64,18 +64,28 @@ export async function getSecureQRDataURL(quote: Quote, secret: string): Promise<
   const fullHash = await computeHMAC(canonMsg, secret);
   const shortHash = fullHash.substring(0, 16).toUpperCase();
 
-  const lines = [
-    `ALERADAH-SECURE-QR`,
-    `REF:${quote.quoteRef.substring(0, 20)}`,
-    quote.rfp ? `RFP:${quote.rfp.substring(0, 16)}` : '',
-    quote.custName ? `TO:${quote.custName.substring(0, 18)}` : '',
-    `AMT:${quote.currency} ${(quote.items.reduce((a, i) => a + i.qty * i.price * (1 - i.rowdisc / 100), 0) * (1 - quote.discount / 100) + quote.shipping) * (1 + quote.vat / 100)}`.substring(0, 20),
-    `SIG:${shortHash}`,
-  ].filter(Boolean);
+  // Advanced QR: External verification link (mock) + Encoded JSON Metadata
+  const verifyUrl = `https://verify.aleradah.bh/v2/verify?ref=${quote.quoteRef}&sig=${shortHash}`;
+  
+  const metadata = JSON.stringify({
+    v: "2.0",
+    ref: quote.quoteRef,
+    ts: new Date().toISOString(),
+    amt: `${quote.currency} ${(quote.items.reduce((a, i) => a + i.qty * i.price * (1 - i.rowdisc / 100), 0) * (1 - (quote.discount || 0) / 100) + (quote.shipping || 0)) * (1 + (quote.vat || 0) / 100)}`,
+    sig: shortHash
+  });
 
-  return await QRCode.toDataURL(lines.join('\n'), { 
-    margin: 2,
-    color: { dark: '#1a4d2e', light: '#ffffff' }
+  // Combine URL and Data for advanced scanners
+  const qrContent = `${verifyUrl}\n\nDATA_BLOCK:\n${metadata}`;
+
+  return await QRCode.toDataURL(qrContent, { 
+    margin: 1,
+    scale: 10,
+    errorCorrectionLevel: 'H', // High error correction for advanced feel
+    color: { 
+      dark: '#1a4d2e', // Corporate Green
+      light: '#ffffff' 
+    }
   });
 }
 
