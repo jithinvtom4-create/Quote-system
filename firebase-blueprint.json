@@ -1,0 +1,25 @@
+{
+  "entities": {
+    "quote": {
+      "title": "Quote",
+      "description": "Chemical solution quote document",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "custName": { "type": "string" },
+        "quoteRef": { "type": "string" },
+        "status": { "type": "string" },
+        "savedAt": { "type": "string", "format": "date-time" },
+        "grandTotal": { "type": "number" }
+      },
+      "required": ["id", "userId", "custName", "quoteRef", "status"]
+    }
+  },
+  "firestore": {
+    "/quotes/{quoteId}": {
+      "schema": "quote",
+      "description": "Collection of quotes"
+    }
+  }
+}
